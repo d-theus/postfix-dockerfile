@@ -18,5 +18,6 @@ CMD if [ -d /etc/opendkim/keys ]; then\
       /opt/setup-postmap.py;\
       fi;\
       postmap /etc/postfix/virtual;\
+      opendkim;\
       postfix start;\
       tail -F /var/log/mail*

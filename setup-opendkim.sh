@@ -1,27 +1,28 @@
 #!/bin/bash
 
 cat >>/etc/opendkim.conf <<EOF
-  AutoRestart             Yes
-  AutoRestartRate         10/1h
-  UMask                   002
-  Syslog                  yes
-  SyslogSuccess           Yes
-  LogWhy                  Yes
+Selector                mail
+AutoRestart             Yes
+AutoRestartRate         10/1h
+UMask                   002
+Syslog                  yes
+SyslogSuccess           Yes
+LogWhy                  Yes
 
-  Canonicalization        relaxed/simple
+Canonicalization        relaxed/simple
 
-  ExternalIgnoreList      refile:/etc/opendkim/TrustedHosts
-  InternalHosts           refile:/etc/opendkim/TrustedHosts
-  KeyTable                refile:/etc/opendkim/KeyTable
-  SigningTable            refile:/etc/opendkim/SigningTable
+ExternalIgnoreList      refile:/etc/opendkim/TrustedHosts
+InternalHosts           refile:/etc/opendkim/TrustedHosts
+KeyTable                refile:/etc/opendkim/KeyTable
+SigningTable            refile:/etc/opendkim/SigningTable
 
-  Mode                    sv
-  PidFile                 /var/run/opendkim/opendkim.pid
-  SignatureAlgorithm      rsa-sha256
+Mode                    sv
+PidFile                 /var/run/opendkim/opendkim.pid
+SignatureAlgorithm      rsa-sha256
 
-  UserID                  opendkim:opendkim
+UserID                  opendkim:opendkim
 
-  Socket                  inet:12301@localhost
+Socket                  inet:12301@localhost
 EOF
 
 cat >>/etc/default/opendkim <<EOF
