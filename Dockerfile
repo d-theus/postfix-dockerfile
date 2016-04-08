@@ -2,9 +2,21 @@ FROM centos:centos7
 MAINTAINER d-theus(http://github.com/d-theus)
 EXPOSE 25
 RUN cat /etc/yum/pluginconf.d/fastestmirror.conf  | sed 's/enabled=1/enabled=0/g' > /etc/yum/pluginconf.d/fastestmirror.conf
-RUN yum -y update
-RUN yum -y install postfix
+RUN yum -y update; yum clean all
+RUN yum -y install epel-release; yum clean all
+RUN yum -y update; yum -y install postfix opendkim opendkim-tools openssl rsyslog; yum clean all
 ADD main.cf /etc/postfix
-ADD virtual /etc/postfix
-RUN postmap /etc/postfix/virtual
-CMD /bin/bash
+ADD setup-opendkim.sh /opt
+ADD setup-postfix.sh /opt
+ADD setup-postmap.py /opt
+
+EXPOSE 25
+
+CMD if [ -d /etc/opendkim/keys ]; then\
+      /opt/setup-opendkim.sh;\
+      /opt/setup-postfix.sh;\
+      /opt/setup-postmap.py;\
+      fi;\
+      postmap /etc/postfix/virtual;\
+      postfix start;\
+      tail -F /var/log/mail*
