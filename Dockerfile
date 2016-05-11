@@ -1,10 +1,9 @@
 FROM centos:centos7
 MAINTAINER d-theus(http://github.com/d-theus)
-EXPOSE 25
 RUN cat /etc/yum/pluginconf.d/fastestmirror.conf  | sed 's/enabled=1/enabled=0/g' > /etc/yum/pluginconf.d/fastestmirror.conf
 RUN yum -y update; yum clean all
 RUN yum -y install epel-release; yum clean all
-RUN yum -y update; yum -y install postfix opendkim opendkim-tools openssl rsyslog; yum clean all
+RUN yum -y update; yum -y install postfix opendkim opendkim-tools openssl; yum clean all
 ADD main.cf /etc/postfix
 ADD setup-opendkim.sh /opt
 ADD setup-postfix.sh /opt
