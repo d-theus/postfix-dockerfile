@@ -31,7 +31,6 @@ cat >>/etc/opendkim/TrustedHosts <<EOF
 localhost
 EOF
 
-mkdir -p /etc/opendkim/keys/$DOMAIN
 cat >>/etc/opendkim/KeyTable <<EOF
 mail._domainkey.$DOMAIN $DOMAIN:mail:/etc/opendkim/keys/$DOMAIN/mail.private
 EOF
@@ -40,6 +39,9 @@ cat >>/etc/opendkim/SigningTable <<EOF
 *@$DOMAIN mail._domainkey.$DOMAIN
 EOF
 
-opendkim-genkey --directory=/etc/opendkim/keys/$DOMAIN --selector=mail --domain=$DOMAIN --bits=1024
+if [ ! -d /etc/opendkim/keys/$DOMAIN ]; then
+  mkdir -p /etc/opendkim/keys/$DOMAIN
+  opendkim-genkey --directory=/etc/opendkim/keys/$DOMAIN --selector=mail --domain=$DOMAIN --bits=1024
+fi
 chown opendkim /etc/opendkim/keys/$DOMAIN/mail.private
 
