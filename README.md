@@ -7,11 +7,18 @@ Here and in the sections following substitute `example.com` for your domain.
 docker run -d --name postfix -p 25:25 \
 -e DOMAIN=example.com \
 -e VIRTUAL="forward-me to-here@gmail.com:forward-also to-here@gmail.com" \
+-e TRUSTED_HOSTS="127.0.0.1 ::1 192.168.0.0 192.168.1.0" \
 dtheus/postfix-dkim
 ```
 
 `VIRTUAL` variable is used to specify contents of `/etc/postfix/virtual` file, which
 is used here for email forwarding. Lines are separated by colons (`:`).
+
+`TRUSTED HOSTS` variable is used to set entries for `/etc/opendkim/TrustedHosts`.
+  Entries are separated by spaces(` `).  By default, it is set to `127.0.0.1 ::1 localhost 172.17.0.0` (default docker network).
+  Obviously, `docker run ... -e TRUSTED_HOSTS='...'` overrides it, so you should explicitly
+  include default entries if needed. No entries would be added to `TrustedHosts` if trusted
+  hosts variable is set to empty string.
 
 *Notice:* no domain supplied for incoming addresses.
 

@@ -4,6 +4,7 @@ RUN cat /etc/yum/pluginconf.d/fastestmirror.conf  | sed 's/enabled=1/enabled=0/g
 RUN yum -y update; yum clean all
 RUN yum -y install epel-release; yum clean all
 RUN yum -y update; yum -y install postfix opendkim opendkim-tools openssl syslog-ng; yum clean all
+ENV TRUSTED_HOSTS "127.0.0.1 ::1 localhost 172.17.0.0"
 ADD main.cf /etc/postfix
 ADD setup-syslog-ng.sh /opt
 ADD setup-opendkim.sh /opt

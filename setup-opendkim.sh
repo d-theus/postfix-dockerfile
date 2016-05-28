@@ -26,9 +26,8 @@ EOF
 
 mkdir -p /etc/opendkim/keys
 
-cat >>/etc/opendkim/TrustedHosts <<EOF
-127.0.0.1
-localhost
+cat >/etc/opendkim/TrustedHosts <<EOF
+$(echo ${TRUSTED_HOSTS} | sed 's/[ ]/\n/g')
 EOF
 
 cat >>/etc/opendkim/KeyTable <<EOF
