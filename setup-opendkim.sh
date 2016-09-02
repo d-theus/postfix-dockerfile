@@ -38,9 +38,15 @@ cat >>/etc/opendkim/SigningTable <<EOF
 *@$DOMAIN mail._domainkey.$DOMAIN
 EOF
 
-if [ ! -d /etc/opendkim/keys/$DOMAIN ]; then
-  mkdir -p /etc/opendkim/keys/$DOMAIN
+mkdir -p /etc/opendkim/keys/$DOMAIN
+if [[ -v DKIM_KEY && -v DKIM_TXT ]]; then
+  echo -e "${DKIM_KEY}" > /etc/opendkim/keys/$DOMAIN/mail.private
+  echo -e "${DKIM_TXT}" > /etc/opendkim/keys/$DOMAIN/mail.txt
+elif [ ! -d /etc/opendkim/keys/$DOMAIN ]; then
   opendkim-genkey --directory=/etc/opendkim/keys/$DOMAIN --selector=mail --domain=$DOMAIN --bits=1024
 fi
-chown opendkim /etc/opendkim/keys/$DOMAIN/mail.private
+chown opendkim:opendkim /etc/opendkim/keys/$DOMAIN/mail.private
+chmod 700 /etc/opendkim/keys/$DOMAIN/mail.private
+
+opendkim-testkey
 

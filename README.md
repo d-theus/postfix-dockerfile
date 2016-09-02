@@ -23,7 +23,20 @@ is used here for email forwarding. Lines are separated by colons (`:`).
 *Notice:* no domain supplied for incoming addresses.
 
 ## OpenDKIM signatures reuse
-If you already have a pair of keys you want to reuse, do the following:
+If you already have a pair of keys you want to reuse, there are two ways to use them inside a container:
+
+### ENV variables
+
+```sh
+...
+-e DKIM_KEY="-----BEGIN RSA PRIVATE KEY-----\nAKKAKLDJAAKBgQC9...a9N/123456a1b2c3e4d5==\n-----END RSA PRIVATE KEY-----" \
+-e DKIM_TXT="mail._domainkey\tIN\tTXT\t(\"v=DKIM1; k=rsa; \" \"p=adf123...asdf12\" )  ; ----- DKIM key mail for example.com \" \
+...
+```
+
+**Note:** use `\n` for line breaks, `\t` for tabs and don't forget to escape quotes.
+
+### A shared volume
 
 - Put the key pair to some location of your choice on the host. E.g. `/etc/opendkim/keys/example.com/`.
   Selector for this image is not **default** but **mail**, so files should be:
@@ -31,6 +44,8 @@ If you already have a pair of keys you want to reuse, do the following:
   - mail.private
 - `run` docker container as mentioned above, but also mount this keys directory of the host:
   ```sh
+  ...
   -v /etc/opendkim/keys/example.com:/etc/opendkim/keys/example.com
+  ...
   ```
 
