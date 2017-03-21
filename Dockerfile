@@ -1,5 +1,5 @@
 FROM centos:centos7
-MAINTAINER d-theus(http://github.com/d-theus)
+MAINTAINER Andrew Dorofeyev (http://github.com/d-theus)
 RUN cat /etc/yum/pluginconf.d/fastestmirror.conf  | sed 's/enabled=1/enabled=0/g' > /etc/yum/pluginconf.d/fastestmirror.conf
 RUN yum -y update; yum clean all
 RUN yum -y install epel-release; yum clean all
