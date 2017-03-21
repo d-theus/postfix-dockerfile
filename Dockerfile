@@ -1,9 +1,9 @@
-FROM centos:centos7
+FROM alpine:3.4
 MAINTAINER Andrew Dorofeyev (http://github.com/d-theus)
-RUN cat /etc/yum/pluginconf.d/fastestmirror.conf  | sed 's/enabled=1/enabled=0/g' > /etc/yum/pluginconf.d/fastestmirror.conf
-RUN yum -y update; yum clean all
-RUN yum -y install epel-release; yum clean all
-RUN yum -y update; yum -y install postfix opendkim opendkim-tools openssl syslog-ng; yum clean all
+
+RUN apk --update --upgrade add postfix opendkim opendkim openssl syslog-ng && \
+    rm -rf /var/cache/apk/*
+
 ENV TRUSTED_HOSTS "127.0.0.1 ::1 localhost 172.17.0.0"
 ADD main.cf /etc/postfix
 ADD setup-syslog-ng.sh /opt
