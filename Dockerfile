@@ -1,8 +1,9 @@
-FROM alpine:3.5
+FROM debian:jessie
 MAINTAINER Andrew Dorofeyev (http://github.com/d-theus)
 
-RUN apk --update --upgrade add postfix opendkim openssl syslog-ng && \
-    rm -rf /var/cache/apk/*
+RUN apt-get update && \
+    apt-get install -y postfix opendkim openssl syslog-ng --no-install-recommends && \
+    apt-get clean
 
 ENV TRUSTED_HOSTS "127.0.0.1 ::1 localhost 172.17.0.0"
 ADD main.cf /etc/postfix
